@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mariadb:
+    build: requirements/mariadb/
+    container_name: mariadb
+    ports:
+      - "3307:3306"
+    volumes:
+      - "~/Desktop/inception/mariadb:/var/lib/mysql"
+    networks:
+      - backend
+    restart: always
+    environment:
+      dbname:     ${dbname}
+      username:   ${username}
+      dbpasswd:   ${dbpasswd}
+      mysqlhost:  ${mysqlhost}
+      rootpw:     ${rootpw}
+    env_file:
+      - .env
+
+networks:
+  backend:
