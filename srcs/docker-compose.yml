@@ -1,4 +1,30 @@
-version: '3'
+version: '3.5'
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+
+volumes:
+  wp:
+    driver: local
+    name: wp
+    driver_opts:
+      type: none
+      o: bind
+      device: /media/sf_data/wordpress
+
+  db:
+    driver: local
+    name: db
+    driver_opts:
+      type: none
+      o: bind
+      device: /media/sf_data/mariadb
+
+
+
+
 services:
 
   mariadb:
@@ -7,16 +33,16 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - "~/Desktop/inception/mariadb:/var/lib/mysql"
+      - "db:/var/lib/mysql"
     networks:
-      - backend
+      - app-network
     restart: always
     environment:
-      dbname:     ${dbname}
-      username:   ${username}
-      dbpasswd:   ${dbpasswd}
-      mysqlhost:  ${mysqlhost}
-      rootpw:     ${rootpw}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE}
+      MYSQL_USER:          ${MYSQL_USER}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+      MYSQL_HOSTNAME:      ${MYSQL_HOSTNAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     env_file:
       - .env
 
@@ -26,12 +52,9 @@ services:
     ports: 
       - "403:403"
     volumes:
-      - "~/Desktop/inception/nginx:/var/www/html"
+      - "wp:/var/www/html"
     networks:
-      - frontend
+      - app-network
     restart: always
-    # TODO depends_on:
+      # TODO depends_on:
 
-networks:
-  backend:
-  frontend:
