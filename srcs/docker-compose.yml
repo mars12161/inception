@@ -1,10 +1,11 @@
 version: '3'
 services:
+
   mariadb:
     build: requirements/mariadb/
     container_name: mariadb
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - "~/Desktop/inception/mariadb:/var/lib/mysql"
     networks:
@@ -19,5 +20,18 @@ services:
     env_file:
       - .env
 
+  nginx:
+    build: requirements/nginx/
+    container_name: nginx
+    ports: 
+      - "403:403"
+    volumes:
+      - "~/Desktop/inception/nginx:/var/www/html"
+    networks:
+      - frontend
+    restart: always
+    # TODO depends_on:
+
 networks:
   backend:
+  frontend:
