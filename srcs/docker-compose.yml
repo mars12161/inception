@@ -56,5 +56,26 @@ services:
     networks:
       - app-network
     restart: always
-      # TODO depends_on:
+    depends_on:
+      - wordpress
+
+  wordpress:
+    build: requirements/nginx
+    container_name: wordpress
+    volumes:
+      - "wp:/var/www/html"
+    networks:
+      - app-network
+    restart: always
+    env_file:
+      - .env
+    environment:
+      WP_ADMIN:       ${WP_ADMIN}
+      WP_ADMIN_PW:    ${WP_ADMIN_PW}
+      WP_ADMIN_MAIL:  ${WP_ADMIN_MAIL}
+      WP_USER:        ${WP_USER}
+      WP_USER_PW:     ${WP_USER_PW}
+      WP_USER_EMAIL:  ${WP_USER_MAIL}
+      URL:            ${URL}
+      TITLE:          ${TITLE}
 
