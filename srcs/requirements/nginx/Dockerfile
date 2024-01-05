@@ -2,13 +2,13 @@ FROM		debian:buster
 
 RUN		apt-get update -y && apt-get install nginx -y && apt-get install openssl -y
 
+RUN		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+		-keyout /etc/ssl/private/nginx.key \
+		-out /etc/ssl/certs/nginx.crt \
+		-subj "/C=DE/ST=Berlin/L=Berlin/O=42Berlin/OU=mschaub/CN=mschaub"
+
+COPY		./conf/default etc/nginx/sites-enabled/default
+
 EXPOSE		443
-
-COPY		./conf/nginx.conf /etc/nginx/sites-enabled/default
-COPY		./tools/script.sh /var/www
-
-RUN		chmod +x /var/www/script.sh
-
-ENTRYPOINT	[ "var/www/script.sh" ]
 
 CMD		["nginx", "-g", "daemon off;"]

@@ -6,9 +6,9 @@ EXPOSE		3306
 
 COPY		./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-COPY		./tools /var/www/
+COPY		./tools/initial_db.sql /
 
-RUN		service mysql start && mysql < /var/www/init.sql && rm -f /var/www/init.sql;
+RUN		service mysql start && mysql < initial_db.sql && rm -f initial_db.sql;
 
-CMD		["mysqld"]
+CMD		/usr/bin/mysqld_safe
 

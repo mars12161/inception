@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 networks:
   app-network:
@@ -34,7 +34,7 @@ services:
       - db:/var/lib/mysql
     networks:
       - app-network
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_DATABASE:      ${MYSQL_DATABASE}
       MYSQL_USER:          ${MYSQL_USER}
@@ -43,7 +43,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     env_file:
       - .env
-
+  
   wordpress:
     build: requirements/nginx
     container_name: wordpress
@@ -67,14 +67,14 @@ services:
       - mariadb
 
   nginx:
-    build: requirements/nginx/
     container_name: nginx
-    ports: 
-      - "403:403"
+    build: ./requirements/nginx/
     volumes:
-      - wp:/var/www/html
+      - wp:/var/www/wordpress
     networks:
       - app-network
     depends_on:
       - wordpress
-    restart: unless-stopped
+    ports:
+      - "443:443"
+
