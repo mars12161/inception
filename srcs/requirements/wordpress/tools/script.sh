@@ -14,6 +14,7 @@ if [ ! -f /var/www/html/wp-config.php ]; then
 	mv wp-cli.phar /usr/local/bin/wp;
 	cd /var/www/html;
 	wp core download --allow-root;
+	mv /var/www/cp-config.php /var/www/html/
 	echo "Creating wordpress admin and user"
 	wp core install --allow-root --url=${URL} --title${TITLE} --admin_user${WP_ADMIN} --admin_password=${WP_ADMIN_PW} --admin_email=${WP_ADMIN_MAIL};
 	wp user create --allow-root ${WP_USER} ${WP_USER_MAIL} --user-pass=${WP_USER_PW};
