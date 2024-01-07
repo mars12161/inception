@@ -1,17 +1,18 @@
 all:
-	@docker-compose -f srcs/docker-compose.yml up
+	@if  [ ! -d "/home/max/data" ]; then \
+		mkdir /home/max/data; \
+		mkdir /home/max/data/wordpress; \
+		mkdir /home/max/data/mariadb; \
+	fi
+	@sudo docker-compose -f srcs/docker-compose.yml up -d
 
 down:
-	@docker-compose -f srcs/docker-compose.yml down
+	@sudo docker-compose -f srcs/docker-compose.yml down --rmi all -v
 
 re:
-	@docker-compose -f srcs/docker-compose.yml up --build
+	@sudo docker-compose -f srcs/docker-compose.yml up -d
 
-clean:
-	@docker stop $$(docker ps -qa); \
-	docker rm $$(docker ps -qa); \
-	docker rmi -f $$(docker images -qa); \
-	docker volume rm $$(docker volume ls -q); \
-	docker network rm $$(docker network ls -q);
+fclean:
+	@sudo docker system prune -a
 
-.PHONY: all re down clean
+.PHONY: all re down fclean
