@@ -1,6 +1,6 @@
 FROM		debian:buster
 
-RUN		apt-get update -y && apt-get install mariadb-server -y
+RUN		apt-get update && apt-get install mariadb-server -y
 
 ARG		MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
 ARG		MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -20,7 +20,7 @@ ARG		WP_USER_PASS=${WP_USER_PASS}
 EXPOSE		3306
 
 COPY		./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
-COPY		./tools/script.sh /
+COPY		tools/script.sh /
 
 RUN		chmod +x ./script.sh
 RUN		bash ./script.sh

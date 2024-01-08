@@ -5,12 +5,12 @@ RUN		apt-get update -y && apt-get install nginx -y && apt-get install openssl -y
 RUN		mkdir /etc/nginx/ssl
 
 COPY		./conf/nginx.conf /etc/nginx/sites-enabled/default
-COPY		./tools/script.sh /var/www
+COPY		./tools/nginx.sh /var/www
 
-RUN		chmod +x /var/www/script.sh
+RUN		chmod +x /var/www/nginx.sh
 RUN		mkdir -p /run/nginx
 
-ENTRYPOINT	["var/www/script.sh"]
+ENTRYPOINT	["var/www/nginx.sh"]
 
 EXPOSE		443
 

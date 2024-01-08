@@ -1,34 +1,11 @@
 version: "3.5"
 
-networks:
-  network: {}
-
-volumes:
-  wp:
-    driver: local
-    name: wp
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/max/data/wordpress
-
-  db:
-    driver: local
-    name: db
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/max/data/mariadb
-
-
-
-
 services:
 
   mariadb:
     container_name: mariadb
     build: 
-      context: requirements/mariadb
+      context: ./requirements/mariadb
       args:
         - MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
         - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -53,8 +30,10 @@ services:
   
   wordpress:
     container_name: wordpress
+    depends_on:
+      - mariadb
     build: 
-      context: requirements/wordpress
+      context: ./requirements/wordpress
       args:
         - MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
         - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -68,26 +47,44 @@ services:
         - WP_USER=${WP_USER}
         - WP_USER_MAIL=${WP_USER_MAIL}
         - WP_USER_PASS=${WP_USER_PASS}
+    restart: always
     volumes:
       - wp:/var/www/wordpress
     networks:
       - network
-    restart: always
     env_file:
       - .env
-    depends_on:
-      - mariadb
     init: true
-
+    
   nginx:
     container_name: nginx
-    build: requirements/nginx/
+    build: ./requirements/nginx/
+    ports:
+      - 443:443
     volumes:
       - wp:/var/www/wordpress
     networks:
       - network
-    ports:
-      - 443:443
     restart: always
     init: true
+    
+networks:
+  network: {}
+
+volumes:
+  wp:
+    driver: local
+    name: wp
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/max/data/wordpress
+
+  db:
+    driver: local
+    name: db
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/max/data/mariadb
 

@@ -6,9 +6,24 @@ RUN		apt-get update && apt-get install -y curl \
 		mariadb-client \
 		&& rm -rf /var/lib/apt/lists/*
 
+ARG             MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
+ARG             MYSQL_DATABASE=${MYSQL_DATABASE}
+ARG             MYSQL_USER=${MYSQL_USER}
+ARG             MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ARG             MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+ARG             WP_DOMAIN=${WP_DOMAIN}
+ARG             WP_TITLE=${WP_TITLE}
+ARG             WP_ADMIN=${WP_ADMIN}
+ARG             WP_MAIL=${WP_MAIL}
+ARG             WP_ADMIN_PASS=${WP_ADMIN_PASS}
+ARG             WP_URL=${WP_URL}
+ARG             WP_USER=${WP_USER}
+ARG             WP_USER_MAIL=${WP_USER_MAIL}
+ARG             WP_USER_PASS=${WP_USER_PASS}
+
 EXPOSE		9000
 
-COPY		./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY		./conf/www.conf /etc/php/7.3/fpm/pool.d
 
 ADD		https://wordpress.org/latest.tar.gz /var/www/latest.tar.gz
 
@@ -20,12 +35,15 @@ RUN		chmod +x ./usr/bin/wp
 
 RUN		mkdir /run/php
 
-COPY		./tools/script.sh /var/www/wordpress/script.sh
+COPY		./tools/config.sh /var/www/wordpress/config.sh
 
-RUN		chmod +x /var/www/wordpress/script.sh
+RUN		chmod +x /var/www/wordpress/config.sh
 
-RUN ls -l /var/www/wordpress/
-RUN ls -l /var/www/wordpress/script.sh
+COPY		./tools/entrypoint.sh /var/www/wordpress/entrypoint.sh
+RUN		chmod +x /var/www/wordpress/entrypoint.sh
 
-CMD		["bash", "/var/www/wordpress/script.sh"]
+RUN		ls -l /var/www/wordpress && pwd
+
+ENTRYPOINT 	["bash", "/var/www/wordpress/entrypoint.sh"]
+
 
