@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 cd /var/www/wordpress
 
@@ -12,6 +12,9 @@ wp user create $WP_USER $WP_USER_MAIL --role=author --user_pass=$WP_USER_PASS --
 
 cd -
 
-#/usr/sbin/php-fpm7.3 -F
+echo "Current directory: $(pwd)"
+ls -l /var/www/wordpress
+
+/usr/sbin/php-fpm7.3 -F
 
 exec "$@"

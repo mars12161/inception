@@ -1,5 +1,7 @@
 FROM		debian:buster
 
+EXPOSE		9000
+
 RUN		apt-get update && apt-get install -y curl \
 		php7.3-fpm \
 		php7.3-mysql \
@@ -21,8 +23,6 @@ ARG             WP_USER=${WP_USER}
 ARG             WP_USER_MAIL=${WP_USER_MAIL}
 ARG             WP_USER_PASS=${WP_USER_PASS}
 
-EXPOSE		9000
-
 COPY		./conf/www.conf /etc/php/7.3/fpm/pool.d
 
 ADD		https://wordpress.org/latest.tar.gz /var/www/latest.tar.gz
@@ -36,14 +36,8 @@ RUN		chmod +x ./usr/bin/wp
 RUN		mkdir /run/php
 
 COPY		./tools/config.sh /var/www/wordpress/config.sh
-
 RUN		chmod +x /var/www/wordpress/config.sh
+CMD		["bash", "/var/www/wordpress/config.sh"]
 
-COPY		./tools/entrypoint.sh /var/www/wordpress/entrypoint.sh
-RUN		chmod +x /var/www/wordpress/entrypoint.sh
-
-RUN		ls -l /var/www/wordpress && pwd
-
-ENTRYPOINT 	["bash", "/var/www/wordpress/entrypoint.sh"]
 
 

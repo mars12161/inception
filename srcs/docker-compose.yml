@@ -2,6 +2,18 @@ version: "3.5"
 
 services:
 
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx/
+    ports:
+      - 443:443
+    volumes:
+      - wp:/var/www/wordpress
+    networks:
+      - network
+    restart: always
+    init: true
+
   mariadb:
     container_name: mariadb
     build: 
@@ -54,18 +66,6 @@ services:
       - network
     env_file:
       - .env
-    init: true
-    
-  nginx:
-    container_name: nginx
-    build: ./requirements/nginx/
-    ports:
-      - 443:443
-    volumes:
-      - wp:/var/www/wordpress
-    networks:
-      - network
-    restart: always
     init: true
     
 networks:
