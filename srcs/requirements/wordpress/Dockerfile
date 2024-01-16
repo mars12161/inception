@@ -39,5 +39,7 @@ COPY		./tools/config.sh /var/www/wordpress/config.sh
 RUN		chmod +x /var/www/wordpress/config.sh
 CMD		["bash", "/var/www/wordpress/config.sh"]
 
+#COPY		./conf/wp-config.php /var/www/wordpress/wp-config.php
 
+#CMD		["/usr/sbin/php-fpm7.3", "-F"]
 
